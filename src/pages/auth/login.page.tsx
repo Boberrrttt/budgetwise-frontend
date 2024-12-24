@@ -1,4 +1,17 @@
+
+import ButtonAuth from "@/components/auth/button.auth"
+import InputFieldAuth from "@/components/auth/inputfield.auth"
+import { validateEmail, validatePassword } from "@/utils/auth/validation.auth"
+import { Button } from "@nextui-org/react"
+import { log } from "console"
 import Link from "next/link"
+import { useEffect, useState } from "react"
+
+
+interface LoginCredentialsProps {
+    email: string,
+    password: string
+}
 
 /**
  * LoginPage
@@ -10,6 +23,28 @@ import Link from "next/link"
  * @returns The LoginPage component
  */
 const LoginPage = () => {
+    const [loginCredentials, setLoginCredentials] = useState<LoginCredentialsProps>({
+        email: "",
+        password: ""
+    })
+
+    const [errors, setErrors] = useState<LoginCredentialsProps>({
+        email: "",
+        password: ""
+    })
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        const emailError = validateEmail(loginCredentials.email)
+        const passwordError = validatePassword(loginCredentials.password)
+        
+        setErrors({
+            email: emailError || "",
+            password: passwordError || ""
+        })
+    }
+
     return (
         <div className="w-screen gap-10 h-screen flex justify-center overflow-auto flex-col items-center">
             {/* Header with logo and title */}
@@ -20,30 +55,24 @@ const LoginPage = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 48 48">
                     <path fill="#7CB9E8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" d="m24.437 11.219l-2.649-4.78l-13.092 8.456m26.321 0l-4.288-7.74l-11.984 7.74m16 13.675a2.047 2.047 0 1 1-2.045-2.047h0c1.13 0 2.045.916 2.045 2.047m-2.54 5.804c-3.23 0-5.831-2.568-5.831-5.757s2.6-5.756 5.832-5.756l9.127-.097c.648 0 1.168.52 1.168 1.166v9.18c0 .647-.52 1.167-1.167 1.167zm7.825-.085v4.238a3.026 3.026 0 0 1-3.019 3.034H8.532A3.026 3.026 0 0 1 5.5 38.543V17.927a3.026 3.026 0 0 1 3.02-3.033h28.477a3.026 3.026 0 0 1 3.033 3.02v4.864" />
                 </svg>
-
             </div>
 
             {/* Form */}
-            <div className="flex flex-col w-[25%]">
+            <form className="flex flex-col w-[25%]" onSubmit={e => handleLogin(e)}>
                 {/* Email field */}
-                <label htmlFor="email" className="text-xl mb-2">Email</label>
-                <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
+                <InputFieldAuth label={"Email"} onChange={e => setLoginCredentials({...loginCredentials, email: e.target.value})} value={loginCredentials.email} error={errors.email}/>
 
-                {/* Password field */}
-                <label htmlFor="email" className="text-xl mt-8 mb-2">Password</label>
-                <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
-    
+                {/* Password field */}                
+                <InputFieldAuth label={"Password"} margin={"mt-8"} onChange={e => setLoginCredentials({...loginCredentials, password: e.target.value})} value={loginCredentials.password} error={errors.password}/>
+
                 {/* Login button */}
-                <a href="#_" className="px-5 py-2 relative mt-16 border-2 border-black flex justify-center items-center  group overflow-hidden  text-black rounded-xl font-bold">
-                    <span className="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-brandLight group-hover:h-full opacity-90"></span>
-                    <span className="relative group-hover:text-white text-xl">Login</span>
-                </a>
+                <ButtonAuth buttonLabel={"Login"}/>
 
                 {/* Signup link */}
                 <span className="text-center mt-12">
                     No account yet? <br /> <Link href={"/auth/signup"} className="underline hover:text-brandLight">Sign up here</Link>
                 </span>
-            </div>
+            </form>
 
         </div>
     )

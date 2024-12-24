@@ -1,4 +1,20 @@
+import ButtonAuth from "@/components/auth/button.auth"
+import InputFieldAuth from "@/components/auth/inputfield.auth"
+import { validateFields } from "@/utils/auth/validation.auth"
+import { sign } from "crypto"
 import Link from "next/link"
+
+
+import { useEffect, useState } from "react"
+
+interface SignupCredentialsProps {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+}
+
 
 /**
  * SignupPage
@@ -9,8 +25,56 @@ import Link from "next/link"
  * 
  * @returns The SignupPage component
  */
+
+
 const SignupPage = () => {
-    return (
+    const [signupCredentials, setSignupCredentials] = useState<SignupCredentialsProps>(
+        {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
+        }
+    )
+
+    const [errors, setErrors] = useState<SignupCredentialsProps>(
+        {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
+        }
+    )
+
+    const handleSignup = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        const validationErrors = validateFields(
+            {
+                firstName: signupCredentials.firstName,
+                lastName: signupCredentials.lastName,
+                email: signupCredentials.email,
+                password: signupCredentials.password,
+                confirmPassword: signupCredentials.confirmPassword
+            },
+            ["firstName", "lastName", "email", "password", "confirmPassword"]
+        );
+
+        if(signupCredentials.password !== signupCredentials.confirmPassword) validationErrors.confirmPassword = "Passwords do not match";
+
+        setErrors({
+            firstName: validationErrors.firstName || "",
+            lastName: validationErrors.lastName || "",
+            email: validationErrors.email || "",
+            password: validationErrors.password || "",
+            confirmPassword: validationErrors.confirmPassword || ""
+        })
+
+    }
+
+    return ( 
         <div className="w-screen gap-10 h-screen flex pt-4 overflow-auto flex-col items-center">
             
             {/* Header with logo and title */}
@@ -25,38 +89,27 @@ const SignupPage = () => {
             </div>
 
             {/* Form */}
-            <div className="flex flex-col w-[35%]">
+            <form className="flex flex-col w-[35%]" onSubmit={e => handleSignup(e)}>
                 <div className="flex gap-10">
                     <div className="flex flex-col w-1/2">
-                        <label htmlFor="email" className="text-xl mb-2">Firstname</label>
-                        <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
+                        <InputFieldAuth label={"Firstname"} onChange={e => setSignupCredentials({...signupCredentials, firstName: e.target.value})} value={signupCredentials.firstName} error={errors.firstName}/>
                     </div>
 
                     <div className="flex flex-col w-1/2">
-                        <label htmlFor="email" className="text-xl mb-2">Lastname</label>
-                        <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
+                        <InputFieldAuth label={"Lastname"} onChange={e => setSignupCredentials({...signupCredentials, lastName: e.target.value})} value={signupCredentials.lastName} error={errors.lastName}/>
                     </div>
                 </div>
 
-                
-                <label htmlFor="email" className="text-xl mt-4 mb-2">Email</label>
-                <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
+                <InputFieldAuth label={"Email"} margin={"mt-4"} onChange={e => setSignupCredentials({...signupCredentials, email: e.target.value})} value={signupCredentials.email} error={errors.email}/>
+                <InputFieldAuth label={"Password"} margin={"mt-4"} onChange={e => setSignupCredentials({...signupCredentials, password: e.target.value})} value={signupCredentials.password} error={errors.password}/>
+                <InputFieldAuth label={"Confirm Password"} margin={"mt-4"} onChange={e => setSignupCredentials({...signupCredentials, confirmPassword: e.target.value})} value={signupCredentials.confirmPassword} error={errors.confirmPassword}/>
 
-                <label htmlFor="email" className="text-xl mt-4 mb-2">Password</label>
-                <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
-                
-                <label htmlFor="email" className="text-xl mt-4 mb-2">Confirm Password</label>
-                <input type="text" className="px-3 py-2 border-2 rounded-xl border-black " />
-
-                <a href="#_" className="px-5 py-2 relative mt-12 border-2 border-black flex justify-center items-center  group overflow-hidden  text-black rounded-xl font-bold">
-                    <span className="absolute top-0 left-0 flex w-full h-0 mb-0 transition-all duration-200 ease-out transform translate-y-0 bg-brandLight group-hover:h-full opacity-90"></span>
-                    <span className="relative group-hover:text-white text-xl">Login</span>
-                </a>
+                <ButtonAuth buttonLabel={"Sign up"}/>
 
                 <span className="text-center mt-12">
                     Already Signed in? <br /> <Link href={"/auth/login"} className="underline hover:text-brandLight">Login here</Link>
                 </span>
-            </div>
+            </form>
 
         </div>
     )
