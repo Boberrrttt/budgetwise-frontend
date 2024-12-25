@@ -4,8 +4,9 @@ import InputFieldAuth from "@/components/auth/inputfield.auth"
 import { validateEmail, validatePassword } from "@/utils/auth/validation.auth"
 import axios from "axios"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter } from "nextjs-toploader/app"
 import { useEffect, useState } from "react"
+import NProgress from "nprogress"
 
 
 interface LoginCredentialsProps {
@@ -36,36 +37,25 @@ const LoginPage = () => {
     })
 
     const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault()
-
-        const emailError = validateEmail(loginCredentials.email)
-        const passwordError = validatePassword(loginCredentials.password)
-        
-        setErrors({
-            email: emailError || "",
-            password: passwordError || ""
-        })
-
-        if(!emailError && !passwordError) {
-            try{
-                const response = await axios.post('http://localhost:8000/api/login', {
-                    email: loginCredentials.email,
-                    password: loginCredentials.password
-                }, {
-                    withCredentials: true
-                })
-
-                if(response.status === 200) {
-                    setLoginCredentials({email: "", password: ""})
-                    router.push('/dashboard')
-                }
-        
-            } catch(error) {
-                console.log(error)
-            }
+        e.preventDefault();
+        NProgress.start(); // Start toploader
+        try {
+          const response = await axios.post("http://localhost:8000/api/login", {
+            email: loginCredentials.email,
+            password: loginCredentials.password,
+          }, { withCredentials: true });
+      
+          if (response.status === 200) {
+            setLoginCredentials({ email: "", password: "" });
+            router.replace("/dashboard");
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          NProgress.done(); // Stop toploader
         }
-
-    }
+      };
+      
 
     return (
         <div className="w-screen gap-10 h-screen flex justify-center overflow-auto flex-col items-center">
@@ -81,16 +71,12 @@ const LoginPage = () => {
 
             {/* Form */}
             <form className="flex flex-col w-[25%]" onSubmit={e => handleLogin(e)}>
-                {/* Email field */}
                 <InputFieldAuth label={"Email"} onChange={e => setLoginCredentials({...loginCredentials, email: e.target.value})} value={loginCredentials.email} error={errors.email}/>
 
-                {/* Password field */}                
                 <InputFieldAuth label={"Password"} margin={"mt-8"} onChange={e => setLoginCredentials({...loginCredentials, password: e.target.value})} value={loginCredentials.password} error={errors.password}/>
 
-                {/* Login button */}
                 <ButtonAuth buttonLabel={"Login"}/>
 
-                {/* Signup link */}
                 <span className="text-center mt-12">
                     No account yet? <br /> <Link href={"/signup"} className="underline hover:text-brandLight">Sign up here</Link>
                 </span>

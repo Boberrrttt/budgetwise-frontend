@@ -1,7 +1,10 @@
 import ButtonAuth from "@/components/auth/button.auth"
 import InputFieldAuth from "@/components/auth/inputfield.auth"
 import { validateFields } from "@/utils/auth/validation.auth"
+import axios from "axios"
+import { sign } from "crypto"
 import Link from "next/link"
+import { useRouter } from "nextjs-toploader/app"
 
 import { useEffect, useState } from "react"
 
@@ -26,6 +29,7 @@ interface SignupCredentialsProps {
 
 
 const SignupPage = () => {
+    const router = useRouter();
     const [signupCredentials, setSignupCredentials] = useState<SignupCredentialsProps>(
         {
             firstName: "",
@@ -46,7 +50,7 @@ const SignupPage = () => {
         }
     )
 
-    const handleSignup = (e: React.FormEvent) => {
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault()
 
         const validationErrors = validateFields(
@@ -69,6 +73,30 @@ const SignupPage = () => {
             password: validationErrors.password || "",
             confirmPassword: validationErrors.confirmPassword || ""
         })
+
+        if(Object.keys(validationErrors).length === 0) {
+            try {
+                const response = await axios.post('http://localhost:8000/api/register', {
+                    name: `${signupCredentials.firstName} ${signupCredentials.lastName}`,
+                    email: signupCredentials.email,
+                    password: signupCredentials.password
+                }, { withCredentials: true });
+
+                if(response.status === 200) {
+                    setSignupCredentials({
+                        firstName: "",
+                        lastName: "",
+                        email: "",
+                        password: "",
+                        confirmPassword: ""
+                    })
+                    window.history.replaceState(null, "", "/dashboard")
+                    router.replace("/dashboard")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
     }
 

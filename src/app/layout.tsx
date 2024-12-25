@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import NextTopLoader from "nextjs-toploader";
+
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
   description: "A collaborative budget tracking website",
   icons: {
     icon: "/favicon.ico",
-  }
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +28,10 @@ export default function RootLayout({
     <html lang="en" className="light">
       <body className={`${nunito.className} bg-neutral-50`}>
         <Providers>
+          <NextTopLoader
+            height={5}
+            showSpinner={false}
+          />
           {children}
         </Providers>
       </body>
