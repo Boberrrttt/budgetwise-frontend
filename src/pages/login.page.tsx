@@ -2,7 +2,9 @@
 import ButtonAuth from "@/components/auth/button.auth"
 import InputFieldAuth from "@/components/auth/inputfield.auth"
 import { validateEmail, validatePassword } from "@/utils/auth/validation.auth"
+import axios from "axios"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 
@@ -21,6 +23,8 @@ interface LoginCredentialsProps {
  * @returns The LoginPage component
  */
 const LoginPage = () => {
+    const router = useRouter();
+
     const [loginCredentials, setLoginCredentials] = useState<LoginCredentialsProps>({
         email: "",
         password: ""
@@ -31,7 +35,7 @@ const LoginPage = () => {
         password: ""
     })
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
 
         const emailError = validateEmail(loginCredentials.email)
@@ -41,6 +45,26 @@ const LoginPage = () => {
             email: emailError || "",
             password: passwordError || ""
         })
+
+        if(!emailError && !passwordError) {
+            try{
+                const response = await axios.post('http://localhost:8000/api/login', {
+                    email: loginCredentials.email,
+                    password: loginCredentials.password
+                }, {
+                    withCredentials: true
+                })
+
+                if(response.status === 200) {
+                    setLoginCredentials({email: "", password: ""})
+                    router.push('/dashboard')
+                }
+        
+            } catch(error) {
+                console.log(error)
+            }
+        }
+
     }
 
     return (
@@ -68,7 +92,7 @@ const LoginPage = () => {
 
                 {/* Signup link */}
                 <span className="text-center mt-12">
-                    No account yet? <br /> <Link href={"/auth/signup"} className="underline hover:text-brandLight">Sign up here</Link>
+                    No account yet? <br /> <Link href={"/signup"} className="underline hover:text-brandLight">Sign up here</Link>
                 </span>
             </form>
 

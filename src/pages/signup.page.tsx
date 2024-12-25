@@ -105,7 +105,7 @@ const SignupPage = () => {
                 <ButtonAuth buttonLabel={"Sign up"}/>
 
                 <span className="text-center mt-12">
-                    Already Signed in? <br /> <Link href={"/auth/login"} className="underline hover:text-brandLight">Login here</Link>
+                    Already Signed in? <br /> <Link href={"/login"} className="underline hover:text-brandLight">Login here</Link>
                 </span>
             </form>
 
