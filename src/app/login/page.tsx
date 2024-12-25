@@ -1,6 +1,6 @@
 'use client'
 
-import LoginPage from "@/pages/auth/login.page"
+import LoginPage from "@/pages/login.page"
 
 const Page = () => {
     return <LoginPage/>

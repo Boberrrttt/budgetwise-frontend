@@ -2,8 +2,6 @@
 import ButtonAuth from "@/components/auth/button.auth"
 import InputFieldAuth from "@/components/auth/inputfield.auth"
 import { validateEmail, validatePassword } from "@/utils/auth/validation.auth"
-import { Button } from "@nextui-org/react"
-import { log } from "console"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
