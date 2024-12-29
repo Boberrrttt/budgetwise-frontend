@@ -11,6 +11,8 @@
   "dependencies": {
     "@nextui-org/react": "^2.6.8",
     "axios": "^1.7.9",
+    "cookie.js": "^7.0.1",
+    "js-cookie": "^3.0.5",
     "next": "15.0.3",
     "nextjs-toploader": "^3.7.15",
     "nprogress": "^0.2.0",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/nprogress": "^0.2.3",
     "@types/react": "^18",
