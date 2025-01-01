@@ -1,12 +1,11 @@
 
 import ButtonAuth from "@/components/auth/button.auth"
 import InputFieldAuth from "@/components/auth/inputfield.auth"
-import { validateEmail, validatePassword } from "@/utils/auth/validation.auth"
-import axios from "axios"
 import Link from "next/link"
-import { useRouter } from "nextjs-toploader/app"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import NProgress from "nprogress"
+import axiosInstance from "@/utils/axiosinstance"
+import { useRouter } from "next/navigation"
 
 
 interface LoginCredentialsProps {
@@ -38,24 +37,23 @@ const LoginPage = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        NProgress.start(); // Start toploader
+        NProgress.start(); 
         try {
-          const response = await axios.post("http://localhost:8000/api/login", {
+          const response = await axiosInstance.post("http://localhost:8000/api/login", {
             email: loginCredentials.email,
             password: loginCredentials.password,
-          }, { withCredentials: true });
-      
+          });
+          
           if (response.status === 200) {
             setLoginCredentials({ email: "", password: "" });
             router.replace("/dashboard");
           }
         } catch (error) {
-          console.error(error);
+          console.error(`Error in login: ${error}`);
         } finally {
-          NProgress.done(); // Stop toploader
+          NProgress.done();
         }
       };
-      
 
     return (
         <div className="w-screen gap-10 h-screen flex justify-center overflow-auto flex-col items-center">

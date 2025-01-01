@@ -1,10 +1,9 @@
 import ButtonAuth from "@/components/auth/button.auth"
 import InputFieldAuth from "@/components/auth/inputfield.auth"
 import { validateFields } from "@/utils/auth/validation.auth"
-import axios from "axios"
-import { sign } from "crypto"
+import axiosInstance from "@/utils/axiosinstance"
 import Link from "next/link"
-import { useRouter } from "nextjs-toploader/app"
+import { useRouter } from "next/navigation"
 
 import { useEffect, useState } from "react"
 
@@ -76,11 +75,11 @@ const SignupPage = () => {
 
         if(Object.keys(validationErrors).length === 0) {
             try {
-                const response = await axios.post('http://localhost:8000/api/register', {
+                const response = await axiosInstance.post('http://localhost:8000/api/register', {
                     name: `${signupCredentials.firstName} ${signupCredentials.lastName}`,
                     email: signupCredentials.email,
                     password: signupCredentials.password
-                }, { withCredentials: true });
+                });
 
                 if(response.status === 200) {
                     setSignupCredentials({
