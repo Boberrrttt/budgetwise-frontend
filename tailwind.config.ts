@@ -13,8 +13,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        brandLight: "#7CB9E8",
-        brandDark: "#00308F"
+        brandPrimary: "#3366B3"
       },
     },
   },

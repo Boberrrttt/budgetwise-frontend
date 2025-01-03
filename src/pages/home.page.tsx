@@ -4,8 +4,9 @@ import React from "react";
 const HomePage = () => {
     
     return (
-        <div className="bg-brandLight h-screen w-screen"> 
+        <div className="h-screen w-screen"> 
             <Nav/>
+            
         </div>
     );
 };
