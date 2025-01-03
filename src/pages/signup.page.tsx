@@ -89,8 +89,7 @@ const SignupPage = () => {
                         password: "",
                         confirmPassword: ""
                     })
-                    window.history.replaceState(null, "", "/dashboard")
-                    router.replace("/dashboard")
+                    router.replace("/home")
                 }
             } catch (error) {
                 console.log(error);

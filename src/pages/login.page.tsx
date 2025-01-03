@@ -46,7 +46,7 @@ const LoginPage = () => {
           
           if (response.status === 200) {
             setLoginCredentials({ email: "", password: "" });
-            router.replace("/dashboard");
+            router.replace("/home");
           }
         } catch (error) {
           console.error(`Error in login: ${error}`);
