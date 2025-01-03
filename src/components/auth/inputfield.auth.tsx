@@ -10,7 +10,7 @@ const InputFieldAuth = ({ label, margin, onChange, value, error }: InputFieldAut
     return (
         <>
             <label htmlFor="email" className={`text-xl ${margin} ${error && 'text-red-500'} mb-2`}>{label}</label>
-            <input type="text" value={value} onChange={onChange} className="px-3 py-2 border-2 rounded-xl border-black " />
+            <input type="text" value={value} onChange={onChange} className="px-3 py-2 border-2 rounded-xl bg- dark:bg-transparent border-black dark:border-white " />
             {error && <p className="text-red-500 mt-1">{error}</p>}
         </>
     )

@@ -4,7 +4,7 @@ import React from "react";
 const HomePage = () => {
     
     return (
-        <div> 
+        <div className="bg-brandLight h-screen w-screen"> 
             <Nav/>
         </div>
     );
