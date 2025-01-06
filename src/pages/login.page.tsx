@@ -25,7 +25,7 @@ interface LoginCredentialsProps {
  */
 const LoginPage = () => {
     const router = useRouter();
-
+    
     const [loginCredentials, setLoginCredentials] = useState<LoginCredentialsProps>({
         email: "",
         password: ""
@@ -47,7 +47,7 @@ const LoginPage = () => {
           
           if (response.status === 200) {
             setLoginCredentials({ email: "", password: "" });
-            router.replace("/home");
+            router.replace('/home');
           }
         } catch (error) {
           console.error(`Error in login: ${error}`);

@@ -13,7 +13,13 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        brandPrimary: "#3366B3"
+        brandPrimary: "#3366B3",
+        brandComplementary: "#B35C33",
+        brandAnalogousGreen: "#33B366",
+        brandAnalogousPurple: "#6633B3",
+        brandNeutralWhite: "#FFFFFF",
+        brandNeutralBlack: "#000000",
+        brandNeutralGray: "#CCCCCC",
       },
     },
   },
