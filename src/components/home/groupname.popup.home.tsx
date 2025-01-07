@@ -3,11 +3,11 @@ import { useState } from "react";
 
 interface GroupNamePopupHomeProps {
     setPopup: (popup: boolean) => void,
-    index: number[],
-    setIndex: React.Dispatch<React.SetStateAction<number[]>>
+    groups: string[],
+    setGroups: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const GroupNamePopupHome = ({ setPopup, index, setIndex }: GroupNamePopupHomeProps) => {
+const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeProps) => {
     const [name, setName] = useState<string>('');
     
     const addItem = async (e: React.FormEvent) => {
@@ -15,8 +15,7 @@ const GroupNamePopupHome = ({ setPopup, index, setIndex }: GroupNamePopupHomePro
         await axiosInstance.post('http://localhost:8000/api/createGroup', {
             name: name
         })
-        
-        setIndex([...index, index.length + 1]);
+        setGroups([...groups, name]);
         setPopup(false)
     };
 
