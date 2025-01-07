@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { validationAuthContent } from "@/content/auth/validation.auth.content";
 
+
+interface ValidationErrorProps {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
 const useValidation = () => {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<ValidationErrorProps>({email: "", password: ""});
 
   const validateEmail = (email: string) => {
     if (!email.trim()) return "Email is required";
@@ -17,11 +26,11 @@ const useValidation = () => {
   };
 
   const validateFields = (fields: Partial<Record<string, string>>, requiredFields: string[]) => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: ValidationErrorProps = { email: "", password: "" };
 
     requiredFields.forEach((field) => {
       if (!fields[field]?.trim()) {
-        newErrors[field] = `${validationAuthContent.fieldNames[field]} is required`;
+        (newErrors as unknown as Record<string, string>)[field] = `${validationAuthContent.fieldNames[field]} is required`;
       }
     });
 
@@ -31,6 +40,7 @@ const useValidation = () => {
 
   return {
     errors,
+    setErrors,
     validateEmail,
     validatePassword,
     validateFields,

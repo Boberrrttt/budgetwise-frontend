@@ -2,10 +2,9 @@ interface InputFieldAuthProps {
     label: string,
     margin?: string,
     value: string,
-    error: string,
+    error?: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-
 const InputFieldAuth = ({ label, margin, onChange, value, error }: InputFieldAuthProps) => {
     return (
         <>

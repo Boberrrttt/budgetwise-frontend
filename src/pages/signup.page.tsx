@@ -6,6 +6,7 @@ import axiosInstance from "@/utils/axiosinstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import NProgress from "nprogress";
 
 interface SignupCredentialsProps {
   firstName: string;
@@ -17,7 +18,7 @@ interface SignupCredentialsProps {
 
 const SignupPage = () => {
   const router = useRouter();
-  const { errors, validateFields } = useValidation();
+  const { errors, validateFields, setErrors } = useValidation();
 
   const [signupCredentials, setSignupCredentials] = useState<SignupCredentialsProps>({
     firstName: "",
@@ -29,43 +30,49 @@ const SignupPage = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    NProgress.start();
 
+    const { firstName, lastName, email, password, confirmPassword } = signupCredentials;
     const validationErrors = validateFields(
-      {
-        firstName: signupCredentials.firstName,
-        lastName: signupCredentials.lastName,
-        email: signupCredentials.email,
-        password: signupCredentials.password,
-        confirmPassword: signupCredentials.confirmPassword,
-      },
+      { firstName, lastName, email, password, confirmPassword },
       ["firstName", "lastName", "email", "password", "confirmPassword"]
     );
 
-    if (signupCredentials.password !== signupCredentials.confirmPassword) {
-      validationErrors.confirmPassword = "Passwords do not match";
+    if (!/\S+@\S+\.\S+/.test(email)) validationErrors.email = "Enter a valid email";
+    if (password.length < 8) validationErrors.password = "Password must be at least 8 characters";
+    if (password !== confirmPassword) validationErrors.confirmPassword = "Passwords do not match";
+
+    const filteredErrors = Object.fromEntries(
+      Object.entries(validationErrors).filter(([key, value]) => value)
+    );
+
+    if (Object.keys(filteredErrors).length) {
+      setErrors(filteredErrors);
+      NProgress.done();
+      return;
     }
 
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const response = await axiosInstance.post("http://localhost:8000/api/register", {
-          name: `${signupCredentials.firstName} ${signupCredentials.lastName}`,
-          email: signupCredentials.email,
-          password: signupCredentials.password,
-        });
+    try {
+      const response = await axiosInstance.post("http://localhost:8000/api/register", {
+        name: `${firstName} ${lastName}`,
+        email,
+        password,
+      });
 
-        if (response.status === 200) {
-          setSignupCredentials({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          });
-          router.replace('/home')
-        }
-      } catch (error) {
-        console.log(error);
+      if (response.status === 200) {
+        setSignupCredentials({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        router.replace('/home');
       }
+    } catch (error) {
+      console.error("Error during signup:", error);
+    } finally {
+      NProgress.done();
     }
   };
 
@@ -74,7 +81,6 @@ const SignupPage = () => {
       {/* Header with logo and title */}
       <div className="flex gap-10 items-center">
         <h1 className="font-bold text-6xl text-brandPrimary">BudgetWise</h1>
-
         {/* Logo */}
         <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 48 48">
           <path
@@ -93,52 +99,47 @@ const SignupPage = () => {
         <div className="flex gap-10">
           <div className="flex flex-col w-1/2">
             <InputFieldAuth
-              label={"Firstname"}
+              label="Firstname"
               onChange={(e) => setSignupCredentials({ ...signupCredentials, firstName: e.target.value })}
               value={signupCredentials.firstName}
               error={errors.firstName}
             />
           </div>
-
           <div className="flex flex-col w-1/2">
             <InputFieldAuth
-              label={"Lastname"}
+              label="Lastname"
               onChange={(e) => setSignupCredentials({ ...signupCredentials, lastName: e.target.value })}
               value={signupCredentials.lastName}
               error={errors.lastName}
             />
           </div>
         </div>
-
         <InputFieldAuth
-          label={"Email"}
-          margin={"mt-4"}
+          label="Email"
+          margin="mt-4"
           onChange={(e) => setSignupCredentials({ ...signupCredentials, email: e.target.value })}
           value={signupCredentials.email}
           error={errors.email}
         />
         <InputFieldAuth
-          label={"Password"}
-          margin={"mt-4"}
+          label="Password"
+          margin="mt-4"
           onChange={(e) => setSignupCredentials({ ...signupCredentials, password: e.target.value })}
           value={signupCredentials.password}
           error={errors.password}
         />
         <InputFieldAuth
-          label={"Confirm Password"}
-          margin={"mt-4"}
+          label="Confirm Password"
+          margin="mt-4"
           onChange={(e) => setSignupCredentials({ ...signupCredentials, confirmPassword: e.target.value })}
           value={signupCredentials.confirmPassword}
           error={errors.confirmPassword}
         />
-
-        <ButtonAuth buttonLabel={"Sign up"} />
-
+        <ButtonAuth buttonLabel="Sign up" />
         <span className="text-center mt-12">
-          Already Signed in? <br /> <Link href={"/login"} className="underline hover:text-brandPrimary">Login here</Link>
+          Already Signed in? <br /> <Link href="/login" className="underline hover:text-brandPrimary">Login here</Link>
         </span>
       </form>
-
       <ToggleThemeButton isAuthenticated={false} />
     </div>
   );

@@ -1,22 +1,14 @@
 import GroupNamePopupHome from "@/components/home/groupname.popup.home";
 import Nav from "@/components/navigation/nav";
-import axiosInstance from "@/utils/axiosinstance";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const HomePage = () => {
     const [index, setIndex] = useState<number[]>([1]);
     const [popup, setPopup] = useState<boolean>(false);
 
-    // const addItem = async () => {
-    //     const response = await axiosInstance.post('http://localhost:8000/api/createGroup', {}, {
+    useEffect(() => {
 
-    //     })
-        
-    //     setIndex([...index, index.length + 1]);
-    // };
-
-
-
+    }, [])
     return (
         <div className="h-screen w-screen"> 
             <Nav/>
@@ -35,7 +27,7 @@ const HomePage = () => {
                     </div>
                 ))}
 
-                { popup && <GroupNamePopupHome setPopup={setPopup} /> }
+                { popup && <GroupNamePopupHome setPopup={setPopup} index={index} setIndex={setIndex} /> }
 
                 
 
