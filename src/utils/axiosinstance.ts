@@ -15,13 +15,21 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
         const router = useRouter();
-        if (error.response && error.response.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+        
+        if (error.response) {
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
 
-            try {
-                return axiosInstance(originalRequest);
-            } catch (refreshError) {
-                console.error('Token refresh failed:', refreshError);
+                try {
+                    return axiosInstance(originalRequest);
+                } catch (refreshError) {
+                    console.error('Token refresh failed:', refreshError);
+                    router.replace('/login');
+                }
+            }
+
+            if (error.response.status === 404) {
+                console.error('Resource not found:', error.response.data);
                 router.replace('/login');
             }
         }
