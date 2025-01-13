@@ -53,7 +53,7 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await axiosInstance.post("http://localhost:8000/api/register", {
+      const response = await axiosInstance.post("api/register", {
         name: `${firstName} ${lastName}`,
         email,
         password,

@@ -17,6 +17,7 @@ const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeP
         })
         setGroups([...groups, name]);
         setPopup(false)
+        
     };
 
     return (

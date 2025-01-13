@@ -2,6 +2,7 @@ import GroupNamePopupHome from "@/components/home/groupname.popup.home";
 import Nav from "@/components/navigation/nav";
 import axiosInstance from "@/utils/axiosinstance";
 import { CircularProgress } from "@mui/material";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const HomePage = () => {
@@ -9,10 +10,11 @@ const HomePage = () => {
     const [popup, setPopup] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
 
+
     useEffect(() => {
         const fetchGroups = async () => {
             try {
-                const response = await axiosInstance.get('http://localhost:8000/api/getGroups');
+                const response = await axiosInstance.get('/api/getGroups');
                 const groupNames = response.data.groups.map((group: any) => group.name);
                 setGroups([...groupNames, 'plus-button']);
                 setLoading(false)
@@ -20,8 +22,7 @@ const HomePage = () => {
                 console.error('Failed to retrieve groups', error);
             }
         }
-        
-        fetchGroups();
+        fetchGroups()
     }, [])
     return (
         <div className="h-screen w-screen"> 
@@ -40,11 +41,11 @@ const HomePage = () => {
                                         <path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z" />
                                     </svg>
                                 </button>
-                            ) : (
-                                <h1 className="text-3xl font-bold">{name}</h1>
+                            ) : (   
+                                <Link href={'/group-plan'} className="text-3xl font-bold">{name}</Link>
                             )}
                         </div>
-                    ))
+                    )) 
                 )}
                 { popup && <GroupNamePopupHome setPopup={setPopup} groups={groups} setGroups={setGroups} /> }
             </div>

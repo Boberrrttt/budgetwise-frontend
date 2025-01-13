@@ -7,6 +7,8 @@ import axiosInstance from "@/utils/axiosinstance";
 import { useRouter } from "next/navigation";
 import ToggleThemeButton from "@/components/theme/button.toggletheme";
 import useValidation from "@/utils/auth/validation.auth";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 interface LoginCredentialsProps {
   email: string;
@@ -46,12 +48,18 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axiosInstance.post("http://localhost:8000/api/login", { email, password });
-      if (response.status === 200) {
+      const loginResponse = await axiosInstance.post(
+        "/api/login",
+        { email, password },  
+      );
+      
+      // If the login and user fetch were successful, proceed with the following
+      if (loginResponse.status === 200) {
         setLoginCredentials({ email: "", password: "" });
         router.replace("/home");
         setErrors({ email: "", password: "" });
       }
+      
     } catch (error) {
       console.error(`Error in login: ${error}`);
       setErrors({ email: "Incorrect email or password", password: "Incorrect email or password" });
