@@ -1,6 +1,6 @@
 const GroupChat = () => {
     return (
-        <div className="border w-[20%] h-full fixed right-0 ">
+        <div className="border w-full h-full  ">
             chat
         </div>
     )

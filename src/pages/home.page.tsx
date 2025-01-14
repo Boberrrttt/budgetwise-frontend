@@ -3,13 +3,13 @@ import Nav from "@/components/navigation/nav";
 import axiosInstance from "@/utils/axiosinstance";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const HomePage = () => {
     const [groups, setGroups] = useState<string[]>(['']);
     const [popup, setPopup] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
-
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -24,9 +24,10 @@ const HomePage = () => {
         }
         fetchGroups()
     }, [])
+
     return (
         <div className="h-screen w-screen"> 
-            <Nav/>
+            <Nav groupname=""/>
             <div className="grid grid-cols-3 gap-4 py-5 px-4">
                 {loading ? (
                     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">    
@@ -42,7 +43,11 @@ const HomePage = () => {
                                     </svg>
                                 </button>
                             ) : (   
-                                <Link href={'/group-plan'} className="text-3xl font-bold">{name}</Link>
+                                <Link href={{ pathname: '/group-plan', query: { groupName: name } }} passHref>
+                                    <div className="text-3xl font-bold cursor-pointer">
+                                        {name}
+                                    </div>
+                                </Link>
                             )}
                         </div>
                     )) 
