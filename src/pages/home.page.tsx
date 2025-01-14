@@ -3,11 +3,19 @@ import Nav from "@/components/navigation/nav";
 import axiosInstance from "@/utils/axiosinstance";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+interface GroupTypes {
+    id: number;
+    name: string;
+    userId: number;
+    createdAt: string;
+    updatedAt: string;
+  }
+  
+
 const HomePage = () => {
-    const [groups, setGroups] = useState<string[]>(['']);
+    const [groups, setGroups] = useState<GroupTypes[]>([]);
     const [popup, setPopup] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -15,9 +23,10 @@ const HomePage = () => {
         const fetchGroups = async () => {
             try {
                 const response = await axiosInstance.get('/api/getGroups');
-                const groupNames = response.data.groups.map((group: any) => group.name);
-                setGroups([...groupNames, 'plus-button']);
-                setLoading(false)
+                const groupData = response.data.groups;
+                setGroups([...groupData, { id: -1, name: 'plus-button', userId: -1, createdAt: '', updatedAt: '' }]);
+                setLoading(false);
+                console.log(response);
             } catch (error) {
                 console.error('Failed to retrieve groups', error);
             }
@@ -34,18 +43,18 @@ const HomePage = () => {
                         <CircularProgress/>
                     </div>
                 ) : (
-                    groups.map((name, idx) => (
+                    groups.map((group, idx) => (
                         <div key={idx} className="p-4 h-40 rounded-2xl border-2 flex items-center justify-center border-black dark:border-white ">
-                            {name === 'plus-button' ? (
+                            {group.name === 'plus-button' ? (
                                 <button onClick={() => setPopup(true)} className="w-full h-full flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24">
                                         <path fill="currentColor" d="M19 12.998h-6v6h-2v-6H5v-2h6v-6h2v6h6z" />
                                     </svg>
                                 </button>
                             ) : (   
-                                <Link href={{ pathname: '/group-plan', query: { groupName: name } }} passHref>
+                                <Link href={{ pathname: '/group-plan', query: { groupName: group.name } }} passHref>
                                     <div className="text-3xl font-bold cursor-pointer">
-                                        {name}
+                                        {group.name}
                                     </div>
                                 </Link>
                             )}
