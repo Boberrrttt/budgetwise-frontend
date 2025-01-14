@@ -11,7 +11,7 @@ const GroupPlanPage = () => {
             <Nav groupname={groupName!}/>
 
             <div className="flex w-full h-full overflow-hidden">
-                <div className="overflow-y-scroll flex-grow items-center flex gap-20 flex-col py-12 pl-20">
+                <div className="overflow-y-auto flex-grow items-center flex gap-20 flex-col py-12 pl-20">
                     <BudgetPlan />
                     <button>
                         <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24">
