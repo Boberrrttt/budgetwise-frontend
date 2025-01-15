@@ -1,6 +1,7 @@
 import GroupNamePopupHome from "@/components/home/groupname.popup.home";
 import Nav from "@/components/navigation/nav";
 import axiosInstance from "@/utils/axiosinstance";
+import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -15,13 +16,16 @@ interface GroupTypes {
   
 
 const HomePage = () => {
+    const { loading, setLoading } = useLoading()
+    
     const [groups, setGroups] = useState<GroupTypes[]>([]);
     const [popup, setPopup] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true);
+
 
     useEffect(() => {
         const fetchGroups = async () => {
             try {
+                setLoading(true)
                 const response = await axiosInstance.get('/api/getGroups');
                 const groupData = response.data.groups;
                 setGroups([...groupData, { id: -1, name: 'plus-button', userId: -1, createdAt: '', updatedAt: '' }]);
@@ -52,7 +56,7 @@ const HomePage = () => {
                                     </svg>
                                 </button>
                             ) : (   
-                                <Link href={{ pathname: '/group-plan', query: { groupName: group.name } }} passHref>
+                                <Link href={{ pathname: '/group-plan', query: { groupName: group.name, groupId: group.id } }} passHref>
                                     <div className="text-3xl font-bold cursor-pointer">
                                         {group.name}
                                     </div>
