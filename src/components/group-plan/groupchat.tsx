@@ -1,6 +1,6 @@
 const GroupChat = () => {
     return (
-        <div className="border w-full h-full  ">
+        <div className="border w-full h-full border-black dark:border-white ">
             chat
         </div>
     )
