@@ -30,9 +30,7 @@ const HomePage = () => {
                 const groupData = response.data.groups;
                 setGroups([...groupData, { id: -1, name: 'plus-button', userId: -1, createdAt: '', updatedAt: '' }]);
                 setLoading(false);
-                console.log(response);
             } catch (error) {
-                console.error('Failed to retrieve groups', error);
             }
         }
         fetchGroups()

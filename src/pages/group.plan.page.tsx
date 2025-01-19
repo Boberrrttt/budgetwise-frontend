@@ -26,13 +26,18 @@ const GroupPlanPage = () => {
     const [budgetPlans, setBudgetPlans] = useState<BudgetPlanTypes[]>([])
     const [isHovered, setIsHovered] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
-
+    
     useEffect(() =>{
         const fetchBudgetPlans = async () =>{
             setLoading(true);
             try {
                 const response = await axiosInstance.get(`/api/getBudgetPlan?groupId=${groupId}`);
-                const budgetPlanData = response.data.budgetPlans;
+                const budgetPlanData = response.data.budgetPlans.map((plan: any) => ({
+                  id: plan.id,
+                  name: plan.name,
+                  allocatedAmount: plan.allocated_amount,
+                  spentAmount: plan.spent_amount
+                }));
                 setBudgetPlans([...budgetPlanData, { id: -1, name: 'plus-button', amount: 0, createdAt: '', updatedAt: '' }]);
                 setLoading(false);
               } catch (error) {
@@ -40,10 +45,8 @@ const GroupPlanPage = () => {
                 setLoading(false);
               }
         }
-        fetchBudgetPlans();
+        fetchBudgetPlans();       
     }, [])
-
-    
 
     return (
         <div className="flex flex-col w-screen h-screen">
@@ -65,14 +68,14 @@ const GroupPlanPage = () => {
                                   </svg>
                                 </button>
                               ) : (
-                                <BudgetPlan />
+                                <BudgetPlan budgetPlan={budgetPlans[idx]}/>
                               )}
                             </div>
                           ))
                     )}
                 </div>
 
-                { isPlusClicked && <BudgetPlanPopup setIsPlusClicked={setIsPlusClicked}/>}
+                { isPlusClicked && <BudgetPlanPopup setIsPlusClicked={setIsPlusClicked} groupId={groupId!}/>}
                 
                 <div className="w-1/4">
                     <GroupChat />

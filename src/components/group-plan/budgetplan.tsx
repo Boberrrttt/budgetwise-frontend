@@ -1,19 +1,27 @@
-import { useState } from "react"
-import ProgressBar from "./progressbar"
+import { Progress } from "../ui/progress";
 
-const BudgetPlan = () => {
-    const [amount, setAmount] = useState({
-        current: 2000, 
-        total: 5000
-    })
+interface BudgetPlanTypes{
+    budgetPlan: PlanTypes 
+}
 
+interface PlanTypes {
+    id: number;
+    name: string;
+    allocatedAmount: number;
+    spentAmount: number;
+}
+
+ const BudgetPlan = ( { budgetPlan } : BudgetPlanTypes) => {
+    const progress = Math.round((budgetPlan.spentAmount / budgetPlan.allocatedAmount) * 100)
+    
     return (
         <div className="flex gap-10 items-center">
-            <h1 className="text-2xl font-bold">Education</h1>
-            <div className="flex flex-col">
+            
+            <h1 className="text-4xl font-bold">{budgetPlan.name}</h1>
+            <div className="flex flex-col gap-3">
                 <div className="flex justify-between">
-                    <h1>P {amount.current} / P {amount.total}</h1>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                    <h1 className="text-xl">P {budgetPlan.spentAmount} / P {budgetPlan.allocatedAmount}</h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <g className="edit-outline">
                             <g fill="currentColor" fillRule="evenodd" className="Vector" clipRule="evenodd">
                                 <path d="M2 6.857A4.857 4.857 0 0 1 6.857 2H12a1 1 0 1 1 0 2H6.857A2.857 2.857 0 0 0 4 6.857v10.286A2.857 2.857 0 0 0 6.857 20h10.286A2.857 2.857 0 0 0 20 17.143V12a1 1 0 1 1 2 0v5.143A4.857 4.857 0 0 1 17.143 22H6.857A4.857 4.857 0 0 1 2 17.143z" />
@@ -22,7 +30,8 @@ const BudgetPlan = () => {
                         </g>
                     </svg>
                 </div>
-                <ProgressBar currentAmount={amount.current} totalAmount={amount.total}/>
+                {/* Progress Bar */}
+                <Progress className="w-[20rem] h-4" value={50}/>
             </div>
         </div>
     )
