@@ -20,8 +20,7 @@ const GroupPlanPage = () => {
     const { loading, setLoading } = useLoading();
 
     const searchParams = useSearchParams();
-    const groupName = searchParams!.get('groupName');
-    const groupId = searchParams!.get('groupId');
+    const { groupName, groupId } = Object.fromEntries(searchParams!);
     
     const [budgetPlans, setBudgetPlans] = useState<BudgetPlanTypes[]>([])
     const [isHovered, setIsHovered] = useState(false);
@@ -68,7 +67,7 @@ const GroupPlanPage = () => {
                                   </svg>
                                 </button>
                               ) : (
-                                <BudgetPlan budgetPlan={budgetPlans[idx]}/>
+                                <BudgetPlan budgetPlan={budgetPlans[idx]} groupName={groupName}/>
                               )}
                             </div>
                           ))
