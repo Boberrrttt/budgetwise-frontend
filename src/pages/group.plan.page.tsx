@@ -37,7 +37,7 @@ const GroupPlanPage = () => {
                   allocatedAmount: plan.allocated_amount,
                   spentAmount: plan.spent_amount
                 }));
-                setBudgetPlans([...budgetPlanData, { id: -1, name: 'plus-button', amount: 0, createdAt: '', updatedAt: '' }]);
+                setBudgetPlans([...budgetPlanData, { id: -1, name: 'plus-button' }]);
                 setLoading(false);
               } catch (error) {
                 console.error('Failed to retrieve budget plans', error);

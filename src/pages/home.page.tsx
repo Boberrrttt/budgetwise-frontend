@@ -24,14 +24,11 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            try {
-                setLoading(true)
-                const response = await axiosInstance.get('/api/getGroups');
-                const groupData = response.data.groups;
-                setGroups([...groupData, { id: -1, name: 'plus-button', userId: -1, createdAt: '', updatedAt: '' }]);
-                setLoading(false);
-            } catch (error) {
-            }
+            setLoading(true)
+            const response = await axiosInstance.get('/api/getGroups');
+            const groupData = response.data.groups;
+            setGroups([...groupData, { id: -1, name: 'plus-button', userId: -1, createdAt: '', updatedAt: '' }]);
+            setLoading(false);
         }
         fetchGroups()
     }, [])

@@ -17,7 +17,8 @@ const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =
             allocatedAmount: amount,
             groupId: groupId
         });
-        setIsPlusClicked(false)     
+        setIsPlusClicked(false) 
+        window.location.reload();    
     } 
 
     return (
@@ -25,11 +26,11 @@ const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =
             <form onSubmit={e => createNewPlan(e)} onClick={e => e.stopPropagation()} className="bg-neutral-50 dark:bg-neutral-900 w-80 h-80 rounded-2xl flex flex-col gap-10 items-center justify-center">
                 <div className="flex flex-col gap-1">
                     <label htmlFor="">Plan name</label>
-                    <input type="text" className="rounded-lg border px-3 py-2" value={name} onChange={e => setName(e.target.value)}  />
+                    <input type="text" className="rounded-lg border px-3 py-2 bg-white text-black border-black" value={name} onChange={e => setName(e.target.value)}  />
                 </div>
                 <div className="flex flex-col gap-1">
                     <label htmlFor="">Allocated amount</label>
-                    <input type="number" className="rounded-lg border px-3 py-2" value={amount} onChange={e => setAmount(e.target.value)} />
+                    <input type="number" className="rounded-lg border px-3 py-2 bg-white text-black border-black" value={amount} onChange={e => setAmount(e.target.value)} />
                 </div>
 
                 <button type="submit" className="bg-brandPrimary w-[70%] rounded-lg py-2 hover:opacity-85" >Enter</button>
