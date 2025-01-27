@@ -5,7 +5,7 @@ import axiosInstance from "@/utils/axiosinstance";
 import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface ItemsType {
   name: string,
@@ -20,17 +20,19 @@ const EditPlanPage = () => {
   
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [items, setItems] = useState<ItemsType[]>([])
+  const [updatedSpentAmount, setUpdatedSpentAmount] = useState<number>(budgetPlan.spentAmount);
+  
+  const fetchItems = useCallback(async () => {
+    setLoading(true);
+    const fetchedItems = await axiosInstance.get(`/api/budgetPlan/getItems?planId=${budgetPlan.id}`)
+    setItems([ ...fetchedItems.data.items, { name: 'plus-button' }]);
+    setLoading(false)
+    setUpdatedSpentAmount(fetchedItems.data.updatedSpentAmount)
+  }, []);
   
   useEffect(() => {
-    const fetchItems = async () => {
-      setLoading(true);
-      const fetchedItems = await axiosInstance.get(`/api/budgetPlan/getItems?planId=${budgetPlan.id}`)
-      setItems([ ...fetchedItems.data.items, { name: 'plus-button' }]);
-      
-      setLoading(false)
-    }
     fetchItems();
-  }, [])  
+  }, [fetchItems]); 
   
   return (
     <div className="flex flex-col h-[100vh]">
@@ -40,7 +42,7 @@ const EditPlanPage = () => {
 
         <div className="flex flex-col flex-grow items-center py-10 overflow-y-auto">
             <h1 className=" text-4xl font-bold mb-6">{budgetPlan.name}</h1>
-            <h1 className=" text-2xl">P {budgetPlan.spentAmount} / P {budgetPlan.allocatedAmount}</h1>
+            <h1 className=" text-2xl">P {updatedSpentAmount} / P {budgetPlan.allocatedAmount}</h1>
 
             <div className="flex w-full items-center flex-col mt-20">
               <div className="flex w-full flex-col justify-center items-center gap-20">

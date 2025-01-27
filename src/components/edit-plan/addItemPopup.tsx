@@ -21,8 +21,9 @@ const AddItemPopup = ({ setIsPopup, planId }: PopupTypes) => {
             price: price,
             planId: planId
         })
-        window.location.reload();    
+        setIsPopup(false)
         setLoading(false)
+        window.location.reload()
     } 
 
   return (
