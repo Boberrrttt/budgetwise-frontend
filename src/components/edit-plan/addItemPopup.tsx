@@ -1,18 +1,28 @@
+import axiosInstance from "@/utils/axiosinstance";
+import { useLoading } from "@/utils/useLoading";
 import { useState } from "react";
 
 interface PopupTypes {
-    isPopup: boolean,
+    planId: string,
     setIsPopup: (value: boolean) => void
 }
 
-const AddItemPopup = ({ setIsPopup }: PopupTypes) => {
+const AddItemPopup = ({ setIsPopup, planId }: PopupTypes) => {
+    const { loading, setLoading } = useLoading();
     const [name, setName] = useState<string>('')
     const [price, setPrice] = useState<string>('');
 
     const addItem = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true);
 
+        await axiosInstance.post('/api/budgetPlan/addItem', {
+            name: name,
+            price: price,
+            planId: planId
+        })
         window.location.reload();    
+        setLoading(false)
     } 
 
   return (
@@ -27,7 +37,7 @@ const AddItemPopup = ({ setIsPopup }: PopupTypes) => {
                 <input type="number" className="rounded-lg border px-3 py-2 bg-white text-black border-black" value={price} onChange={e => setPrice(e.target.value)} />
             </div>
 
-            <button type="submit" className="bg-brandPrimary w-[70%] rounded-lg py-2 hover:opacity-85" >Enter</button>
+            <button type="submit" className="bg-brandPrimary w-[70%] rounded-lg py-2 hover:opacity-85" >{loading? 'Adding item...' : 'Enter'}</button>
         </form>
     </div>
   );

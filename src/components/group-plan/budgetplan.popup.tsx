@@ -12,7 +12,7 @@ const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =
 
     const createNewPlan = async (e: React.FormEvent) => {
         e.preventDefault()
-        await axiosInstance.post('http://localhost:8000/api/createBudgetPlan', {
+        await axiosInstance.post('/api/budgetPlan/createBudgetPlan', {
             name: name,
             allocatedAmount: amount,
             groupId: groupId

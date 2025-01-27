@@ -30,7 +30,7 @@ const GroupPlanPage = () => {
         const fetchBudgetPlans = async () =>{
             setLoading(true);
             try {
-                const response = await axiosInstance.get(`/api/getBudgetPlan?groupId=${groupId}`);
+                const response = await axiosInstance.get(`/api/budgetPlan/getBudgetPlan?groupId=${groupId}`);
                 const budgetPlanData = response.data.budgetPlans.map((plan: any) => ({
                   id: plan.id,
                   name: plan.name,
