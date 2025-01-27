@@ -4,10 +4,11 @@ import { useState } from "react";
 
 interface PopupTypes {
     planId: string,
-    setIsPopup: (value: boolean) => void
+    setIsPopup: (value: boolean) => void,
+    fetchItems: () => void
 }
 
-const AddItemPopup = ({ setIsPopup, planId }: PopupTypes) => {
+const AddItemPopup = ({ setIsPopup, planId, fetchItems }: PopupTypes) => {
     const { loading, setLoading } = useLoading();
     const [name, setName] = useState<string>('')
     const [price, setPrice] = useState<string>('');
@@ -22,8 +23,8 @@ const AddItemPopup = ({ setIsPopup, planId }: PopupTypes) => {
             planId: planId
         })
         setIsPopup(false)
+        fetchItems()
         setLoading(false)
-        window.location.reload()
     } 
 
   return (
