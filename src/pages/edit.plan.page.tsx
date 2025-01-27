@@ -20,7 +20,7 @@ const EditPlanPage = () => {
   
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [items, setItems] = useState<ItemsType[]>([])
-
+  
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true);
@@ -36,11 +36,11 @@ const EditPlanPage = () => {
     <div className="flex flex-col h-[100vh]">
       <Nav groupname={groupName}/>
 
-      <div className="flex w-full overflow-hidden ">
+      <div className="flex w-full overflow-hidden h-full">
 
-        <div className="flex flex-col flex-grow items-center py-10 overflow-y-scroll">
+        <div className="flex flex-col flex-grow items-center py-10 overflow-y-auto">
             <h1 className=" text-4xl font-bold mb-6">{budgetPlan.name}</h1>
-            <h1 className=" text-2xl">P 123 / P 123</h1>
+            <h1 className=" text-2xl">P {budgetPlan.spentAmount} / P {budgetPlan.allocatedAmount}</h1>
 
             <div className="flex w-full items-center flex-col mt-20">
               <div className="flex w-full flex-col justify-center items-center gap-20">
