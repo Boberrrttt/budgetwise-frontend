@@ -48,7 +48,7 @@ const EditPlanPage = () => {
   
   return (
     <div className="flex flex-col h-[100vh]">
-      <Nav groupname={groupName}/>
+      <Nav groupname={groupName} planName={budgetPlan.name}/>
 
       <div className="flex w-full overflow-hidden h-full">
 

@@ -35,7 +35,7 @@ const HomePage = () => {
 
     return (
         <div className="h-screen w-screen"> 
-            <Nav groupname=""/>
+            <Nav/>
             <div className="grid grid-cols-3 gap-4 py-5 px-4">
                 {loading ? (
                     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">    
