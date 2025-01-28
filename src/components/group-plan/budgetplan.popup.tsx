@@ -1,4 +1,5 @@
 import axiosInstance from "@/utils/axiosinstance"
+import { useLoading } from "@/utils/useLoading";
 import React, { useState } from "react"
 
 interface BudgetPlanPopupTypes {
@@ -7,17 +8,20 @@ interface BudgetPlanPopupTypes {
 }
 
 const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =>{
+    const { loading, setLoading } = useLoading();
     const [name, setName] = useState<string>('')
     const [amount, setAmount] = useState<string>('');
 
     const createNewPlan = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
         await axiosInstance.post('/api/budgetPlan/createBudgetPlan', {
             name: name,
             allocatedAmount: amount,
             groupId: groupId
         });
-        setIsPlusClicked(false) 
+        setIsPlusClicked(false)
+        setLoading(false) 
         window.location.reload();    
     } 
 
@@ -33,7 +37,7 @@ const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =
                     <input type="number" className="rounded-lg border px-3 py-2 bg-white text-black border-black" value={amount} onChange={e => setAmount(e.target.value)} />
                 </div>
 
-                <button type="submit" className="bg-brandPrimary w-[70%] rounded-lg py-2 hover:opacity-85" >Enter</button>
+                <button type="submit" className="bg-brandPrimary w-[70%] rounded-lg py-2 hover:opacity-85" >{ loading? 'Creating plan...' : 'Create'}</button>
             </form>
         </div>
     )

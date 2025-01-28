@@ -59,7 +59,7 @@ const GroupPlanPage = () => {
                         </div>
                     ) : (
                         budgetPlans.map((plan, idx) => (
-                            <div key={idx}>
+                            <div key={idx} className="w-[70%]">
                               {plan.name === 'plus-button' ? (
                                 <button onClick={() => setIsPlusClicked(true)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="w-full h-full flex items-center justify-center">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24">
