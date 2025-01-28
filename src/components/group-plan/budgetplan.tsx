@@ -17,7 +17,7 @@ interface PlanTypes {
     const progress = Math.round((budgetPlan.spentAmount / budgetPlan.allocatedAmount) * 100)
     
     return (
-        <Link href={{ pathname: '/edit-plan', query: {groupName: groupName, plan: JSON.stringify(budgetPlan)}}} className="flex gap-10 items-center w-full justify-between hover:shadow-white hover:shadow-[0_2px_10px_rgba(255,255,255,0.2)] rounded-3xl py-6 px-8">
+        <Link href={{ pathname: '/edit-plan', query: {groupName: groupName, plan: JSON.stringify(budgetPlan)}}} className="flex gap-10 items-center w-full justify-between hover:shadow-[0_2px_10px_rgba(0,0,0,0.7)] hover:dark:shadow-[0_2px_10px_rgba(255,255,255,0.7)]  rounded-3xl py-6 px-8">
             <h1 className="text-4xl font-bold">{budgetPlan.name}</h1>
             <div className="flex flex-col gap-3">
                 <h1 className="text-xl">P {budgetPlan.spentAmount} / P {budgetPlan.allocatedAmount}</h1>
