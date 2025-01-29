@@ -15,15 +15,6 @@ interface LoginCredentialsProps {
   password: string;
 }
 
-/**
- * LoginPage
- * 
- * This component renders the login page. It contains
- * a form with fields for email and password. It also contains
- * a link to the signup page.
- * 
- * @returns The LoginPage component
- */
 const LoginPage = () => {
   const router = useRouter();
   const { errors, setErrors } = useValidation();
@@ -61,7 +52,6 @@ const LoginPage = () => {
       }
       
     } catch (error) {
-      console.error(`Error in login: ${error}`);
       setErrors({ email: "Incorrect email or password", password: "Incorrect email or password" });
     } finally {
       NProgress.done();

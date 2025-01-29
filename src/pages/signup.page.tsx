@@ -70,7 +70,7 @@ const SignupPage = () => {
         router.replace('/home');
       }
     } catch (error) {
-      console.error("Error during signup:", error);
+      setErrors({ email: "Email already exists" });
     } finally {
       NProgress.done();
     }
