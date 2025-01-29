@@ -1,4 +1,5 @@
 import axiosInstance from "@/utils/axiosinstance";
+import { useError } from "@/utils/useError";
 import { useLoading } from "@/utils/useLoading";
 import { useState } from "react";
 
@@ -18,7 +19,9 @@ interface GroupNamePopupHomeTypes {
 
 const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeTypes) => {
   const { loading, setLoading } = useLoading();
+  const { error, handleError, clearError } = useError();
   const [name, setName] = useState<string>('');
+
 
   const createGroup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,14 +34,16 @@ const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeT
       setGroups([...groups, newGroup]);
       setPopup(false);
       setLoading(false)
+      clearError();
       window.location.reload();
     } catch (error) {
-      console.error('Failed to create group', error);
+      setLoading(false)
+      handleError('Input group name');
     }
   };
 
   return (
-    <div onClick={() => setPopup(false)} className="bg-black bg-opacity-40 w-screen h-screen fixed top-0 left-0 z-10 flex items-center justify-center">
+    <div onClick={() => {setPopup(false); clearError();}} className="bg-black bg-opacity-40 w-screen h-screen fixed top-0 left-0 z-10 flex items-center justify-center">
       <form onClick={(e) => e.stopPropagation()} onSubmit={e => createGroup(e)} className="bg-white dark:bg-neutral-900 flex items-center py-6 px-7 gap-4 justify-center flex-col rounded-2xl">
         <h1 className="text-black dark:text-white font-bold text-2xl">Input group name</h1>
         <div className="border border-black flex rounded-xl">
@@ -47,6 +52,7 @@ const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeT
             {loading ? 'Creating group...' : 'Enter'}
           </button>
         </div>
+        { error !== null && <p className="text-red-500">{error}</p>}
       </form>
     </div>
   );
