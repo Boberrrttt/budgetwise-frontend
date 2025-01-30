@@ -2,10 +2,11 @@ import AddItemPopup from "@/components/edit-plan/addItemPopup";
 import GroupChat from "@/components/group-plan/groupchat";
 import Nav from "@/components/navigation/nav";
 import { Button } from "@/components/ui/button";
+import useBudgetStore from "@/store/useBudgetStore";
 import axiosInstance from "@/utils/axiosinstance";
 import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 interface ItemsType {
@@ -17,17 +18,14 @@ interface ItemsType {
 const EditPlanPage = () => {
   const { loading, setLoading } = useLoading();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { groupName, plan } = Object.fromEntries(searchParams!);
-  const budgetPlan = JSON.parse(plan);
-  
+  const { groupName, plan: budgetPlan} = useBudgetStore()
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [items, setItems] = useState<ItemsType[]>([])
-  const [updatedSpentAmount, setUpdatedSpentAmount] = useState<number>(budgetPlan.spentAmount);
+  const [updatedSpentAmount, setUpdatedSpentAmount] = useState<number>(budgetPlan!.spentAmount);
   
   const fetchItems = useCallback(async () => {
     setLoading(true);
-    const fetchedItems = await axiosInstance.get(`/api/budgetPlan/getItems?planId=${budgetPlan.id}`)
+    const fetchedItems = await axiosInstance.get(`/api/budgetPlan/getItems?planId=${budgetPlan!.id}`)
     setItems([ ...fetchedItems.data.items, { name: 'plus-button' }]);
     setLoading(false)
     setUpdatedSpentAmount(fetchedItems.data.updatedSpentAmount)
@@ -51,7 +49,7 @@ const EditPlanPage = () => {
   const deletePlan = async () => {
     const response = await axiosInstance.delete('/api/budgetPlan/deleteBudgetPlan', {
       params: {
-        planId: budgetPlan.id
+        planId: budgetPlan!.id
       }
     })
     console.log(response.data);
@@ -60,14 +58,14 @@ const EditPlanPage = () => {
   
   return (
     <div className="flex flex-col h-[100vh]">
-      <Nav groupname={groupName} planName={budgetPlan.name}/>
+      <Nav groupname={groupName!} planName={budgetPlan!.name}/>
 
       <div className="flex w-full overflow-hidden h-full">
         <Button onClick={deletePlan} className="absolute border-red-800 border-2 hover:bg-red-800  ml-5 mt-5 " variant="outline">Delete Plan</Button>
         
         <div className="flex flex-col flex-grow items-center py-10 overflow-y-auto">
-            <h1 className=" text-4xl font-bold mb-6">{budgetPlan.name}</h1>
-            <h1 className=" text-2xl">P {updatedSpentAmount} / P {budgetPlan.allocatedAmount}</h1>
+            <h1 className=" text-4xl font-bold mb-6">{budgetPlan!.name}</h1>
+            <h1 className=" text-2xl">P {updatedSpentAmount} / P {budgetPlan!.allocatedAmount}</h1>
 
             <div className="flex w-full items-center flex-col mt-20">
               <div className="flex w-full flex-col justify-center items-center gap-20">
@@ -106,7 +104,7 @@ const EditPlanPage = () => {
           <div className="w-1/4">
             <GroupChat />
           </div>          
-          {isPopup && <AddItemPopup planId={budgetPlan.id} setIsPopup={setIsPopup} fetchItems={fetchItems} />}
+          {isPopup && <AddItemPopup planId={budgetPlan!.id.toString()} setIsPopup={setIsPopup} fetchItems={fetchItems} />}
       </div>
     </div>
   );

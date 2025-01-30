@@ -1,5 +1,6 @@
 import GroupNamePopupHome from "@/components/home/groupname.popup.home";
 import Nav from "@/components/navigation/nav";
+import useBudgetStore from "@/store/useBudgetStore";
 import axiosInstance from "@/utils/axiosinstance";
 import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
@@ -17,10 +18,9 @@ interface GroupTypes {
 
 const HomePage = () => {
     const { loading, setLoading } = useLoading()
-    
+    const setGroup = useBudgetStore((state) => state.setGroup)
     const [groups, setGroups] = useState<GroupTypes[]>([]);
     const [popup, setPopup] = useState<boolean>(false);
-
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -51,7 +51,7 @@ const HomePage = () => {
                                     </svg>
                                 </button>
                             ) : (   
-                                <Link href={{ pathname: '/group-plan', query: { groupName: group.name, groupId: group.id } }} passHref>
+                                <Link href={'/group-plan'} onClick={() => setGroup(group.name, group.id)} passHref>
                                     <div className="text-3xl font-bold cursor-pointer">
                                         {group.name}
                                     </div>
