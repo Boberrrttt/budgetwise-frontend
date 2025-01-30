@@ -18,7 +18,7 @@ interface ItemsType {
 const EditPlanPage = () => {
   const { loading, setLoading } = useLoadingStore((state) => state);
   const router = useRouter();
-  const { groupName, plan: budgetPlan} = useBudgetStore()
+  const { groupName, plan: budgetPlan} = useBudgetStore((state) => state)
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [items, setItems] = useState<ItemsType[]>([])
   const [updatedSpentAmount, setUpdatedSpentAmount] = useState<number>(budgetPlan!.spentAmount);
