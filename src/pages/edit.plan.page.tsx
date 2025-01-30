@@ -3,8 +3,8 @@ import GroupChat from "@/components/group-plan/groupchat";
 import Nav from "@/components/navigation/nav";
 import { Button } from "@/components/ui/button";
 import useBudgetStore from "@/store/useBudgetStore";
+import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance";
-import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -16,7 +16,7 @@ interface ItemsType {
 }
 
 const EditPlanPage = () => {
-  const { loading, setLoading } = useLoading();
+  const { loading, setLoading } = useLoadingStore((state) => state);
   const router = useRouter();
   const { groupName, plan: budgetPlan} = useBudgetStore()
   const [isPopup, setIsPopup] = useState<boolean>(false);

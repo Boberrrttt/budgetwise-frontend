@@ -3,10 +3,10 @@ import GroupChat from "@/components/group-plan/groupchat";
 import BudgetPlan from "@/components/group-plan/budgetplan";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/utils/axiosinstance";
-import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
 import BudgetPlanPopup from "@/components/group-plan/budgetplan.popup";
 import useBudgetStore from "@/store/useBudgetStore";
+import useLoadingStore from "@/store/useLoadingStore";
 
 interface BudgetPlanTypes {
     id: number;
@@ -17,7 +17,7 @@ interface BudgetPlanTypes {
 }
 
 const GroupPlanPage = () => {
-    const { loading, setLoading } = useLoading();
+    const { loading, setLoading } = useLoadingStore((state) => state);
 
     const { groupName, groupId } = useBudgetStore();
 
@@ -54,7 +54,7 @@ const GroupPlanPage = () => {
             <div className="flex w-full h-full overflow-hidden">
                 <div className="overflow-y-auto flex-grow items-center flex gap-20 flex-col py-12 pl-20">
                     {loading ? (
-                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div>
                             <CircularProgress />
                         </div>
                     ) : (

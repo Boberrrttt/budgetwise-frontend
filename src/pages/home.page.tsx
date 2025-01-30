@@ -1,8 +1,8 @@
 import GroupNamePopupHome from "@/components/home/groupname.popup.home";
 import Nav from "@/components/navigation/nav";
 import useBudgetStore from "@/store/useBudgetStore";
+import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance";
-import { useLoading } from "@/utils/useLoading";
 import { CircularProgress } from "@mui/material";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ interface GroupTypes {
   
 
 const HomePage = () => {
-    const { loading, setLoading } = useLoading()
+    const { loading, setLoading } = useLoadingStore((state) => state)
     const setGroup = useBudgetStore((state) => state.setGroup)
     const [groups, setGroups] = useState<GroupTypes[]>([]);
     const [popup, setPopup] = useState<boolean>(false);

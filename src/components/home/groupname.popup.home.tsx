@@ -1,6 +1,6 @@
+import useErrorStore from "@/store/useErrorStore";
+import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance";
-import { useError } from "@/utils/useError";
-import { useLoading } from "@/utils/useLoading";
 import { useState } from "react";
 
 interface GroupTypes {
@@ -18,8 +18,8 @@ interface GroupNamePopupHomeTypes {
 }
 
 const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeTypes) => {
-  const { loading, setLoading } = useLoading();
-  const { error, handleError, clearError } = useError();
+  const { loading, setLoading } = useLoadingStore((state) => state);
+  const { error, setError, clearError } = useErrorStore((state) => state);
   const [name, setName] = useState<string>('');
 
 
@@ -38,7 +38,7 @@ const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeT
       window.location.reload();
     } catch (error) {
       setLoading(false)
-      handleError('Input group name');
+      setError('Input group name');
     }
   };
 

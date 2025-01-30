@@ -1,6 +1,6 @@
+import useErrorStore from "@/store/useErrorStore";
+import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance"
-import { useError } from "@/utils/useError";
-import { useLoading } from "@/utils/useLoading";
 import React, { useState } from "react"
 
 interface BudgetPlanPopupTypes {
@@ -9,8 +9,8 @@ interface BudgetPlanPopupTypes {
 }
 
 const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =>{
-    const { loading, setLoading } = useLoading();
-    const { error, handleError, clearError } = useError()
+    const { loading, setLoading } = useLoadingStore((state) => state);
+    const { error, setError, clearError } = useErrorStore((state) => state)
     const [name, setName] = useState<string>('')
     const [amount, setAmount] = useState<string>('');
 
@@ -29,7 +29,7 @@ const BudgetPlanPopup = ( { setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =
             window.location.reload();
         } catch (error) {
             setLoading(false)
-            handleError('All fields required')
+            setError('All fields required')
         } 
     } 
 

@@ -1,6 +1,6 @@
+import useErrorStore from "@/store/useErrorStore";
+import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance";
-import { useError } from "@/utils/useError";
-import { useLoading } from "@/utils/useLoading";
 import { useState } from "react";
 
 interface PopupTypes {
@@ -10,8 +10,8 @@ interface PopupTypes {
 }
 
 const AddItemPopup = ({ setIsPopup, planId, fetchItems }: PopupTypes) => {
-    const { loading, setLoading } = useLoading();
-    const { error, handleError, clearError } = useError()
+    const { loading, setLoading } = useLoadingStore((state) => state);
+    const { error, clearError, setError } = useErrorStore((state) => state)
     const [name, setName] = useState<string>('')
     const [price, setPrice] = useState<string>('');
 
@@ -30,7 +30,7 @@ const AddItemPopup = ({ setIsPopup, planId, fetchItems }: PopupTypes) => {
             setLoading(false)
         } catch (error) {
             setLoading(false)
-            handleError('All fields required')
+            setError('All fields required')
         }
     } 
 
