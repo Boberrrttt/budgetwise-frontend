@@ -17,7 +17,11 @@ interface GroupTypes {
   
 
 const HomePage = () => {
-    const { loading, setLoading } = useLoadingStore((state) => state)
+    const { loading, setLoading } = useLoadingStore((state) => ({
+        loading: state.loading,
+        setLoading: state.setLoading
+    }));
+    
     const setGroup = useBudgetStore((state) => state.setGroup)
     const [groups, setGroups] = useState<GroupTypes[]>([]);
     const [popup, setPopup] = useState<boolean>(false);
