@@ -17,15 +17,11 @@ interface BudgetPlanTypes {
 }
 
 const GroupPlanPage = () => {
-    const { loading, setLoading } = useLoadingStore((state) => ({
-        loading: state.loading,
-        setLoading: state.setLoading
-    }));
-    
-    const { groupName, groupId } = useBudgetStore((state) => ({
-        groupName: state.groupName, 
-        groupId: state.groupId
-    }));
+    const loading = useLoadingStore((state) => state.loading);
+    const setLoading = useLoadingStore((state) => state.setLoading);
+
+    const groupId = useBudgetStore((state) => state.groupId);
+    const groupName = useBudgetStore((state) => state.groupName);
 
     const [budgetPlans, setBudgetPlans] = useState<BudgetPlanTypes[]>([]);
     const [isHovered, setIsHovered] = useState(false);

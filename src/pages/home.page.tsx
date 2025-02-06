@@ -17,10 +17,8 @@ interface GroupTypes {
   
 
 const HomePage = () => {
-    const { loading, setLoading } = useLoadingStore((state) => ({
-        loading: state.loading,
-        setLoading: state.setLoading
-    }));
+    const loading = useLoadingStore((state) => state.loading);
+    const setLoading = useLoadingStore((state) => state.setLoading);
     
     const setGroup = useBudgetStore((state) => state.setGroup)
     const [groups, setGroups] = useState<GroupTypes[]>([]);

@@ -18,17 +18,14 @@ interface GroupNamePopupHomeTypes {
 }
 
 const GroupNamePopupHome = ({ setPopup, groups, setGroups }: GroupNamePopupHomeTypes) => {
-  const { loading, setLoading } = useLoadingStore((state) => ({
-      loading: state.loading,
-      setLoading: state.setLoading
-  }));
 
-  const { error, setError, clearError } = useErrorStore((state) => ({
-      error: state.error,
-      setError: state.setError,
-      clearError: state.clearError
-  }));
-
+  const loading = useLoadingStore((state) => state.loading);
+  const setLoading = useLoadingStore((state) => state.setLoading);
+  
+  const error = useErrorStore((state) => state.error);
+  const setError = useErrorStore((state) => state.setError);
+  const clearError = useErrorStore((state) => state.clearError);
+  
   const [name, setName] = useState<string>('');
 
 
