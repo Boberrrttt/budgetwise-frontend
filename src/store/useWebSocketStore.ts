@@ -1,44 +1,55 @@
-import Pusher from 'pusher-js'
 import { create } from 'zustand';
 
-interface WebSocketTypes {
-    data: Record<string, any>;
-    subscribe: (channelName: string, eventName: string) => void;
-    unsubscribe: (channelName: string, eventName: string) => void;
+interface WebSocketStore {
+    socket: WebSocket | null;
+    isConnected: boolean;
+    connect: (url: string) => void;
+    disconnect: () => void;
+    reconnect: (url: string) => void; // Optional reconnect
 }
 
-const useWebSocketStore = create<WebSocketTypes>(( set, get) => {
+const useWebSocketStore = create<WebSocketStore>((set, get) => ({
+    socket: null,
+    isConnected: false,
 
-    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
-        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-        wsHost: '127.0.0.1',
-        wsPort: 6001,
-        forceTLS: false,
-        disableStats: true,
-    })
+    connect: (url: string) => {
+        const socket = new WebSocket(url);
+        
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+            set({ socket, isConnected: true }); // Store socket and set connected state
+        };
 
-    return {
-        data: {},
-        subscribe: (channelName: string, eventName: string) => {
-            const channel = pusher.subscribe(channelName)
+        socket.onmessage = (event) => {
+            console.log('Message from server:', event.data);
+        };
 
-            channel.bind(eventName, (newData: any) => {
-                set((state) => ({
-                    data: {
-                        ...state.data,
-                        [`${channelName}_${eventName}`]: newData
-                    }
-                }))
-            })
-        },
-        unsubscribe: (channelName: string, eventName: string) => {
-            const channel = pusher.channels.channels[channelName]
-            if (channel) {
-                channel.unbind(eventName)
-                pusher.unsubscribe(channelName)
-            }
+        socket.onclose = () => {
+            console.log('WebSocket connection closed');
+            set({ socket: null, isConnected: false }); // Reset state when closed
+        };
+
+        socket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            set({ isConnected: false });
+        };
+    },
+
+    disconnect: () => {
+        const { socket } = get();
+        if (socket) {
+            socket.close();
+            set({ socket: null, isConnected: false });
         }
-    }
-})
+    },
 
-export default useWebSocketStore
+    reconnect: (url: string) => {
+        const { isConnected } = get();
+        if (!isConnected) {
+            console.log('Attempting to reconnect...');
+            get().connect(url); // Reconnect if not already connected
+        }
+    },
+}));
+
+export default useWebSocketStore;

@@ -7,6 +7,7 @@ import { CircularProgress } from "@mui/material";
 import BudgetPlanPopup from "@/components/group-plan/budgetplan.popup";
 import useBudgetStore from "@/store/useBudgetStore";
 import useLoadingStore from "@/store/useLoadingStore";
+import { echo } from "@/lib/echo";
 
 interface BudgetPlanTypes {
     id: number;
@@ -26,27 +27,38 @@ const GroupPlanPage = () => {
     const [budgetPlans, setBudgetPlans] = useState<BudgetPlanTypes[]>([]);
     const [isHovered, setIsHovered] = useState(false);
     const [isPlusClicked, setIsPlusClicked] = useState(false);
+    
+    const fetchBudgetPlans = async () => {
+        setLoading(true);
+        try {
+            await axiosInstance.get('/api/ping');
+            const response = await axiosInstance.get(`/api/budgetPlan/getBudgetPlan?groupId=${groupId}`);
+            const budgetPlanData = response.data.budgetPlans.map((plan: any) => ({
+                id: plan.id,
+                name: plan.name,
+                allocatedAmount: plan.allocated_amount,
+                spentAmount: plan.spent_amount,
+            }));
+            setBudgetPlans([...budgetPlanData, { id: -1, name: "plus-button", allocatedAmount: 0, spentAmount: 0, groupId }]);
+        } catch (error) {
+            console.error("Failed to retrieve budget plans", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchBudgetPlans = async () => {
-            setLoading(true);
-            try {
-                const response = await axiosInstance.get(`/api/budgetPlan/getBudgetPlan?groupId=${groupId}`);
-                const budgetPlanData = response.data.budgetPlans.map((plan: any) => ({
-                    id: plan.id,
-                    name: plan.name,
-                    allocatedAmount: plan.allocated_amount,
-                    spentAmount: plan.spent_amount,
-                }));
-                setBudgetPlans([...budgetPlanData, { id: -1, name: "plus-button", allocatedAmount: 0, spentAmount: 0, groupId }]);
-            } catch (error) {
-                console.error("Failed to retrieve budget plans", error);
-            } finally {
-                setLoading(false);
-            }
-        };
 
         fetchBudgetPlans();
+
+        echo.channel('ping-channel')
+        .listen("PingEvent", (event: any) => {
+            console.log("📩 Event received:", event);
+        })
+        .error((error: any) => {
+            console.error("❌ Echo error:", error);
+        });
+
     }, []);
 
     return (

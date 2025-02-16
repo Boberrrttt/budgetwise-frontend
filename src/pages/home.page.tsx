@@ -3,7 +3,9 @@ import Nav from "@/components/navigation/nav";
 import useBudgetStore from "@/store/useBudgetStore";
 import useLoadingStore from "@/store/useLoadingStore";
 import axiosInstance from "@/utils/axiosinstance";
+import socket from "@/utils/socket";
 import { CircularProgress } from "@mui/material";
+import Echo from "laravel-echo";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -34,6 +36,20 @@ const HomePage = () => {
         }
         fetchGroups()
     }, [])
+
+    
+    
+
+    // useEffect(() => {
+    //     socket.on('message', (data) => {
+    //         console.log(data)
+    //     });
+    
+    //     // Clean up on unmount
+    //     return () => {
+    //       socket.disconnect();
+    //     };
+    //   }, []);
 
     return (
         <div className="h-screen w-screen"> 
