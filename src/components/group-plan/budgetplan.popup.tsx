@@ -55,7 +55,7 @@ const BudgetPlanPopup = ({ setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =>
             className="w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 fixed top-0 left-0 z-20"
         >
             <form
-                // onSubmit={createNewPlan}
+                onSubmit={createNewPlan}
                 onClick={(e) => e.stopPropagation()}
                 className="bg-neutral-50 dark:bg-neutral-900 w-80 rounded-2xl flex flex-col gap-10 items-center py-7"
             >

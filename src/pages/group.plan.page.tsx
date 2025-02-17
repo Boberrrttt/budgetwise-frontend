@@ -51,13 +51,38 @@ const GroupPlanPage = () => {
 
         fetchBudgetPlans();
 
-        echo.channel('ping-channel')
-        .listen("PingEvent", (event: any) => {
-            console.log("📩 Event received:", event);
-        })
-        .error((error: any) => {
-            console.error("❌ Echo error:", error);
-        });
+        const channel = echo.channel(`budget-plan.${groupId}`)
+            .listen('NewBudgetPlanCreated', (event: any) => {
+                console.log("📩 Budget Plan Updated Event:", event);
+
+                setBudgetPlans((prevPlans) => {
+                    const exists = prevPlans.some((plan) => plan.id === event.budgetPlan.id);
+                      if (exists) {
+                        // ✅ Update the existing plan
+                        return prevPlans.map(plan => 
+                            plan.id === event.budgetPlan.id ? event.budgetPlan : plan
+                        );
+                        } else {
+                            // ✅ Add the new plan
+                            return [...prevPlans, event.budgetPlan];
+                    }
+                })
+            })
+            .error((error: any) => {
+                console.error("❌ Echo error:", error);
+            });
+
+             return () => {
+                channel.stopListening("NewBudgetPlanCreated");
+                echo.leaveChannel(`budget-plan.${groupId}`);
+            };
+        // echo.channel('ping-channel')
+        // .listen("PingEvent", (event: any) => {
+        //     console.log("📩 Event received:", event);
+        // })
+        // .error((error: any) => {
+        //     console.error("❌ Echo error:", error);
+        // });
 
     }, []);
 
