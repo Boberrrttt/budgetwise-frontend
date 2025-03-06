@@ -5,6 +5,7 @@ import axiosInstance from "@/utils/axiosinstance";
 import React, { useEffect, useState } from "react";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import { echo } from "@/lib/echo";
 
 interface BudgetPlanPopupTypes {
     setIsPlusClicked: (value: boolean) => void;
@@ -22,23 +23,50 @@ const BudgetPlanPopup = ({ setIsPlusClicked, groupId }: BudgetPlanPopupTypes) =>
     const [name, setName] = useState<string>("");
     const [amount, setAmount] = useState<string>("");
 
-    // const { socket, connect, disconnect } = useWebSocketStore();
+
+    // listen for events updated in this popup and log it
+    // edit the .private or keep it the same
+    useEffect(() => {
+        const channel = echo.private(`budget-plans.${groupId}`)
+        channel.listen('.BudgetPlanCreated', (event: any) => {
+            console.log(`New budget plan received: ${event}`);
+        })
+
+        return () => {
+            channel.stopListening(".BudgetPlanCreated")
+        }
+    }, [groupId])
 
 
     const createNewPlan = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             setLoading(true);
-            await axiosInstance.post("/api/budgetPlan/createBudgetPlan", {
-                name: name,
-                allocatedAmount: amount,
-                groupId: groupId,
-            });
-
-            setLoading(false);
-            clearError();
-            setIsPlusClicked(false);
-
+            console.log("⏳ Creating budget plan...");
+            
+            try {
+                const response = await axiosInstance.post("/api/budgetPlan/createBudgetPlan", {
+                    name: name,
+                    allocatedAmount: amount,
+                    groupId: groupId,
+                });
+            
+                console.log("✅ Budget plan created:", response.data);
+            
+                echo.private(`budget-plans.${groupId}`).whisper("BudgetPlanCreated", {
+                    message: "A new budget plan has been created!",
+                    plan: response.data, // Send newly created plan data
+                });
+            
+                console.log("📢 Whisper event sent to WebSocket:", response.data);
+            
+            } catch (error) {
+                console.error("❌ Error creating budget plan:", error);
+            } finally {
+                setLoading(false);
+                console.log("✅ Done processing budget plan creation.");
+            }
+            
             
         } catch (error) {
             setLoading(false);
